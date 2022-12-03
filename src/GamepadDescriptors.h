@@ -81,11 +81,11 @@ static const uint8_t *getHIDReport(uint16_t *size, InputMode mode)
 // Convert ASCII string into UTF-16
 static const uint16_t *convertStringDescriptor(uint16_t *payloadSize, const char *str, int charCount)
 {
-	static uint16_t payload[32];
+	static uint16_t payload[256];
 
 	// Cap at max char
-	if (charCount > 31)
-		charCount = 31;
+	if (charCount > 255)
+		charCount = 255;
 
 	for (uint8_t i = 0; i < charCount; i++)
 		payload[1 + i] = str[i];
@@ -100,7 +100,7 @@ static const uint16_t *getStringDescriptor(uint16_t *size, InputMode mode, uint8
 {
 	uint8_t charCount;
 	char *str;
-
+	if (index == 0xEE) return NULL;
 	if (index == 0)
 	{
 		str = (char *)xinput_string_descriptors[0];
